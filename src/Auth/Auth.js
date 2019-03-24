@@ -43,4 +43,15 @@ export default class Auth {
     const expiresAt = JSON.parse(localStorage.getItem("expiresAt"));
     return new Date().getTime() < expiresAt;
   }
+
+  logout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("id_token");
+    localStorage.removeItem("expiresAt");
+
+    this.auth0.logout({
+      clientID: process.env.REACT_APP_AUTH0_CLIENT_ID,
+      returnTo: "http://localhost:3000"
+    });
+  };
 }
