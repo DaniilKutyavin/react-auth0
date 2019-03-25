@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function Nav({ auth: { isAuthenticated, logout, login } = {} }) {
+export default function Nav({
+  auth: { isAuthenticated, userHasScopes, logout, login } = {}
+}) {
   return (
     <nav>
       <ul>
@@ -17,6 +19,11 @@ export default function Nav({ auth: { isAuthenticated, logout, login } = {} }) {
         {isAuthenticated() && (
           <li>
             <Link to="/private">Private</Link>
+          </li>
+        )}
+        {isAuthenticated() && userHasScopes(["read:courses"]) && (
+          <li>
+            <Link to="/course">Courses</Link>
           </li>
         )}
         <li>
