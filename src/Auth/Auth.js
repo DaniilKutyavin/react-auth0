@@ -26,7 +26,7 @@ export default class Auth {
   login = () => {
     localStorage.setItem(
       REDIRECT_ON_LOGIN,
-      JSON.stringify(this.history.location)
+      JSON.stringify(this.history.location.pathname)
     );
     this.auth0.authorize();
   };
@@ -36,17 +36,9 @@ export default class Auth {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
 
-        const redirectLocation = (function getRedirectLocation() {
-          try {
-            return (
-              JSON.parse(localStorage.getItem(REDIRECT_ON_LOGIN)).pathname ||
-              "/"
-            );
-          } catch (e) {
-            console.error(e);
-            return "/";
-          }
-        })();
+        const redirectLocation =
+          JSON.parse(localStorage.getItem(REDIRECT_ON_LOGIN)) || "/";
+        localStorage.removeItem(REDIRECT_ON_LOGIN);
 
         this.history.push(redirectLocation);
       } else if (err) {
