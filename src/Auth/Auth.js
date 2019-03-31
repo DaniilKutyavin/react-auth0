@@ -86,4 +86,14 @@ export default class Auth {
     const grantedScopes = (_scopes || "").split(" ");
     return scopes.every(scope => grantedScopes.includes(scope));
   };
+
+  renewToken = cb =>
+    this.auth0.checkSession({}, (err, result) => {
+      if (err) {
+        console.error(`Error: ${err.error} - ${err.description}`);
+      } else {
+        this.setSession(result);
+      }
+      if (typeof cb === "function") cb(err, result);
+    });
 }
