@@ -45,5 +45,20 @@ app.get("/course", checkJwt, checkScope(["read:courses"]), (req, res) => {
   });
 });
 
+const checkRole = role => (req, res, next) => {
+  const assigntedRoles = req.user["http://localhost:3000/roles"];
+  if (Array.isArray(assigntedRoles) && assigntedRoles.includes(role)) {
+    return next();
+  } else {
+    return res.status(401).send("Insufficient role");
+  }
+};
+
+app.get("/admin", checkJwt, checkRole("admin"), (req, res) => {
+  res.json({
+    message: "Hello from an admin API!"
+  });
+});
+
 app.listen(3001);
 console.log("API server listenting on " + process.env.REACT_APP_AUTH0_API_URL);
